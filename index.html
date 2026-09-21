@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Titan Warriors | Elite Dev & Model Engineering Team</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        titan: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            900: '#0f172a',
+                            dark: '#05070d',
+                            card: '#0c101c',
+                            cyan: '#00f2fe',
+                            accent: '#4facfe',
+                            gold: '#ffd700',
+                            goldGlow: '#f59e0b',
+                            neonPurple: '#a855f7'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+                    },
+                    boxShadow: {
+                        'neon-cyan': '0 0 25px rgba(0, 242, 254, 0.45)',
+                        'neon-blue': '0 0 25px rgba(79, 172, 254, 0.45)',
+                        'neon-gold': '0 0 25px rgba(255, 215, 0, 0.45)',
+                        'logo-glow': '0 0 40px rgba(0, 242, 254, 0.35), 0 0 15px rgba(255, 215, 0, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon using Logo -->
+    <link rel="icon" type="image/png" href="C:/Users/Aman%20Singh/Downloads/Gemini_Generated_Image_y147">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #04060a;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(12, 16, 28, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 242, 254, 0.15);
+        }
+
+        .glass-panel-hover:hover {
+            background: rgba(20, 28, 48, 0.88);
+            border-color: rgba(255, 215, 0, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 35px -10px rgba(0, 242, 254, 0.35), 0 0 15px rgba(255, 215, 0, 0.2);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 40%, #ffd700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-gold-text {
+            background: linear-gradient(135deg, #ffd700 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-border {
+            position: relative;
+            border-radius: 1.25rem;
+            background: linear-gradient(135deg, rgba(0,242,254,0.4), rgba(168,85,247,0.2), rgba(255,215,0,0.5));
+            padding: 1.5px;
+        }
+
+        .glow-effect {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* Hero Logo Animation */
+        .logo-float {
+            animation: floatLogo 5s infinite ease-in-out;
+        }
+
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(0.5deg); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #04060a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f2fe;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.35; transform: scale(1); }
+            50% { opacity: 0.65; transform: scale(1.08); }
+        }
+        .animate-pulse-slow {
+            animation: pulseGlow 6s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative selection:bg-cyan-500 selection:text-black">
+
+    <!-- Interactive Canvas Background for Cyber Particles -->
+    <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Ambient Gradient Glowing Orbs -->
+    <div class="glow-effect w-96 h-96 bg-cyan-500 top-10 -left-20 animate-pulse-slow"></div>
+    <div class="glow-effect w-96 h-96 bg-purple-600 top-1/3 -right-20 animate-pulse-slow" style="animation-delay: 2s;"></div>
+    <div class="glow-effect w-96 h-96 bg-amber-500 bottom-10 left-1/3 animate-pulse-slow" style="animation-delay: 4s;"></div>
+
+    <header class="sticky top-0 z-40 w-full glass-panel border-b border-cyan-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo & Name -->
+            <a href="#" class="flex items-center space-x-3 group">
+                <div class="relative w-11 h-11 rounded-xl p-[1px] bg-gradient-to-tr from-cyan-400 via-amber-400 to-purple-500 transition-transform duration-300 group-hover:scale-105 shadow-neon-cyan overflow-hidden flex items-center justify-center">
+                    <img src="C:/Users/Aman%20Singh/Downloads/Gemini_Generated_Image_y147p6y147p6y147.png" alt="The Titan Warriors Logo" class="w-full h-full object-cover rounded-[11px] bg-slate-950" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-full h-full bg-slate-950 rounded-[11px] flex items-center justify-center text-cyan-400 font-bold font-mono text-sm\'>TW</div>';">
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-black tracking-wider text-white font-mono uppercase flex items-center gap-1.5">
+                        THE TITAN <span class="text-cyan-400">WARRIORS</span>
+                    </span>
+                    <span class="text-[10px] text-amber-400 -mt-1 font-mono tracking-widest uppercase font-bold">EST. 2026 • AI & FULL-STACK</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-300">
+                <a href="#about" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-circle-info text-xs text-cyan-400"></i> About Us</a>
+                <a href="#team" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-users text-xs text-amber-400"></i> The Warriors</a>
+                <a href="#capabilities" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-cubes text-xs text-purple-400"></i> Services</a>
+                <a href="#contact" class="hover:text-amber-400 transition-colors flex items-center gap-1.5"><i class="fa-solid fa-envelope text-xs text-amber-400"></i> Contact</a>
+            </nav>
+
+            <!-- Quick Action Call to Action Button -->
+            <div class="hidden sm:flex items-center space-x-4">
+                <a href="#request-model" class="px-5 py-2.5 rounded-xl font-extrabold text-xs uppercase tracking-wider bg-gradient-to-r from-cyan-400 via-blue-500 to-amber-400 text-slate-950 hover:shadow-neon-gold transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2">
+                    <i class="fa-solid fa-brain"></i> Request Model
+                </a>
+            </div>
+
+            <!-- Mobile Hamburger Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-white p-2 focus:outline-none">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-gray-800 px-6 py-4 space-y-3">
+            <a href="#about" class="block text-gray-300 hover:text-cyan-400 py-1">About Us</a>
+            <a href="#team" class="block text-gray-300 hover:text-cyan-400 py-1">The Warriors</a>
+            <a href="#capabilities" class="block text-gray-300 hover:text-cyan-400 py-1">Services</a>
+            <a href="#contact" class="block text-amber-400 hover:text-amber-300 py-1">Contact Founder</a>
+            <a href="#request-model" class="inline-block mt-2 px-5 py-2 rounded-lg bg-gradient-to-r from-cyan-400 to-amber-400 text-slate-950 text-xs font-bold uppercase tracking-wider">Request Model Solution</a>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+
+        <section id="about" class="relative pt-8 pb-16 md:pt-16 md:pb-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-4xl mx-auto space-y-6">
+                
+                <!-- Featured Team Logo Insignia -->
+                <div class="relative inline-block mx-auto mb-2 group cursor-pointer" onclick="scrollToFounder()">
+                    <div class="absolute -inset-2 rounded-2xl bg-gradient-to-r from-cyan-500 via-amber-400 to-purple-600 opacity-65 blur-lg group-hover:opacity-100 transition duration-500"></div>
+                    <div class="relative w-44 sm:w-56 md:w-64 mx-auto rounded-2xl p-1 bg-gradient-to-b from-amber-400 via-cyan-400 to-slate-900 shadow-logo-glow logo-float overflow-hidden flex items-center justify-center">
+                        <img src="file:///C:/Users/Aman%20Singh/Downloads/Gemini_Generated_Image_y147p6y147p6y147.png" alt="The Titan Warrior Official Crest" class="w-full h-auto rounded-xl object-cover bg-slate-950 border border-slate-800" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-full h-48 bg-slate-950 rounded-xl flex items-center justify-center border border-cyan-500/30 text-cyan-400 font-bold font-mono text-2xl\'>TITAN WARRIORS</div>';">
+                    </div>
+                </div>
+
+                <!-- Founder Spotlight Pill Badge -->
+                <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full glass-panel border-amber-500/40 text-xs sm:text-sm font-mono text-cyan-300 hover:border-amber-400 transition-all cursor-pointer shadow-lg" onclick="scrollToFounder()">
+                    <span class="flex h-2.5 w-2.5 relative">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
+                    </span>
+                    <span>FOUNDER & LEADER: <strong class="text-amber-400 font-sans">Aman Singh Tomar</strong></span>
+                    <span class="text-gray-500">|</span>
+                    <span class="text-gray-300 flex items-center gap-1"><i class="fa-solid fa-phone text-xs text-emerald-400"></i> 8604689569</span>
+                </div>
+
+                <!-- Main Hero Headline -->
+                <h1 class="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-none text-white">
+                    WE BUILD THE FUTURE WITH <br>
+                    <span class="gradient-text uppercase">TITAN-GRADE PRECISION</span>
+                </h1>
+
+                <p class="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto font-light leading-relaxed">
+                    An elite squad of full-stack architects, database researchers, backend logic testers, and public sentiment analysts. We engineer resilient models and modern web ecosystems for complex business challenges.
+                </p>
+
+                <!-- Action CTA Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                    <a href="#team" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-400 via-blue-600 to-amber-400 text-slate-950 font-black text-sm uppercase tracking-wider hover:shadow-neon-cyan transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-users-gear text-lg"></i>
+                        <span>Meet The Warriors</span>
+                    </a>
+                    <a href="#request-model" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-panel border-amber-500/40 text-amber-400 hover:text-amber-300 hover:border-amber-400 font-extrabold text-sm uppercase tracking-wider transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3">
+                        <i class="fa-solid fa-lightbulb text-lg"></i>
+                        <span>Submit Project / Model Request</span>
+                    </a>
+                </div>
+
+                <!-- Quick Metric Banner -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-10 text-left">
+                    <div class="glass-panel p-4 rounded-xl border-l-4 border-l-cyan-400">
+                        <div class="text-2xl font-black text-cyan-400 font-mono">4 SQUAD</div>
+                        <div class="text-xs text-gray-400 font-medium uppercase mt-0.5">Specialized Experts</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border-l-4 border-l-purple-500">
+                        <div class="text-2xl font-black text-purple-400 font-mono">END-TO-END</div>
+                        <div class="text-xs text-gray-400 font-medium uppercase mt-0.5">Model Testing & QA</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border-l-4 border-l-amber-400">
+                        <div class="text-2xl font-black text-amber-400 font-mono">FULL-STACK</div>
+                        <div class="text-xs text-gray-400 font-medium uppercase mt-0.5">Web Architecture</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border-l-4 border-l-emerald-400">
+                        <div class="text-2xl font-black text-emerald-400 font-mono">100% PUBLIC</div>
+                        <div class="text-xs text-gray-400 font-medium uppercase mt-0.5">Sentiment & Market Insights</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="team" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <div class="text-cyan-400 font-mono text-xs uppercase tracking-widest font-semibold mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-bolt"></i> THE CORE OPERATIVES
+                    </div>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+                        Meet <span class="gradient-text">The Titan Warriors</span>
+                    </h2>
+                </div>
+                <p class="text-gray-400 text-sm max-w-md mt-4 md:mt-0">
+                    Click on any Warrior card to unlock deep operational specs, technical stack ratings, and key contributions.
+                </p>
+            </div>
+
+            <!-- Team Grid (4 Member Cards) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="team-cards-container">
+
+                <!-- Member 1: Aman Singh Tomar (Founder) -->
+                <div class="glass-panel glass-panel-hover rounded-2xl p-6 transition-all duration-300 cursor-pointer relative group flex flex-col justify-between" onclick="openMemberModal('aman')">
+                    <div class="absolute top-4 right-4 bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold px-2.5 py-1 rounded-full border border-amber-500/40 uppercase tracking-widest z-10">
+                        FOUNDER
+                    </div>
+                    <div>
+                        <!-- Styled Avatar Container with Glow & Cyber Effect -->
+                        <div class="relative w-24 h-24 rounded-2xl bg-gradient-to-br from-amber-400 via-cyan-400 to-purple-600 p-[2px] mb-5 group-hover:scale-105 transition-all duration-500 shadow-neon-gold group-hover:shadow-neon-cyan overflow-hidden flex items-center justify-center">
+                            <img src="file:///c:/Users/Aman%20Singh/Downloads/WhatsApp Image 2026-09-18 at 23.36.35.jpeg" alt="Aman Singh Tomar - Founder" class="w-full h-full object-cover rounded-[14px] transform group-hover:scale-110 transition-transform duration-500 filter brightness-105 contrast-105" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-amber-400 text-2xl font-black font-mono\'>AT</div>';">
+                            <div class="absolute inset-0 rounded-[14px] bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-40 group-hover:opacity-10 transition-opacity"></div>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors flex items-center justify-between">
+                            <span>Aman Singh Tomar</span>
+                        </h3>
+                        <p class="text-xs font-mono text-amber-400 mt-1 uppercase tracking-wider font-semibold">Team Leader & Head Developer</p>
+                        
+                        <p class="text-gray-300 text-xs mt-3 leading-relaxed line-clamp-3">
+                            Visionary leader with stellar communication and high-level architectural foresight. Directs squad operations and end-to-end full stack development.
+                        </p>
+
+                        <!-- Skill tags -->
+                        <div class="flex flex-wrap gap-1.5 mt-4">
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-cyan-300 border border-cyan-500/20">Leadership</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-amber-300 border border-amber-500/20">Architecture</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-purple-300 border border-purple-500/20">Comm Skills</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-gray-800 flex items-center justify-between text-xs font-mono text-gray-400 group-hover:text-amber-400">
+                        <span>Click for Full Spec</span>
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- Member 2: Anamika Jaiswal -->
+                <div class="glass-panel glass-panel-hover rounded-2xl p-6 transition-all duration-300 cursor-pointer relative group flex flex-col justify-between" onclick="openMemberModal('anamika')">
+                    <div class="absolute top-4 right-4 bg-cyan-500/20 text-cyan-300 text-[10px] font-mono font-bold px-2.5 py-1 rounded-full border border-cyan-500/40 uppercase tracking-widest z-10">
+                        FRONTEND & DB
+                    </div>
+                    <div>
+                        <!-- Styled Avatar Container with Image & Cyber Glow -->
+                        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-600 to-cyan-400 p-1 mb-5 group-hover:scale-105 transition-transform flex items-center justify-center">
+                            <div class="w-full h-full bg-slate-950 rounded-xl flex items-center justify-center text-purple-400 text-3xl font-black font-mono">
+                            <img src="file:///C:/Users/Aman%20Singh/Downloads/Gemini_Generated_Image_rbparcrbparcrbpa.png" alt="Anamika Jaiswal" class="w-full h-full object-cover object-top rounded-[14px] transform group-hover:scale-110 transition-transform duration-500 filter brightness-105 contrast-105" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-cyan-400 text-2xl font-black font-mono\'>AJ</div>';">
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors">Anamika Jaiswal</h3>
+                        <p class="text-xs font-mono text-cyan-400 mt-1 uppercase tracking-wider font-semibold">Frontend Dev & DB Researcher</p>
+                        
+                        <p class="text-gray-300 text-xs mt-3 leading-relaxed line-clamp-3">
+                            A brilliant active listener with deep expertise in Python, SQL, and sleek HTML/CSS UI craftsmanship. Masters database structures and dynamic frontends.
+                        </p>
+
+                        <!-- Skill tags -->
+                        <div class="flex flex-wrap gap-1.5 mt-4">
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-cyan-300 border border-cyan-500/20">Python</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-amber-300 border border-amber-500/20">SQL</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-purple-300 border border-purple-500/20">HTML/CSS</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-gray-800 flex items-center justify-between text-xs font-mono text-gray-400 group-hover:text-cyan-400">
+                        <span>Click for Full Spec</span>
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- Member 3: Ayush Godiayal -->
+                <div class="glass-panel glass-panel-hover rounded-2xl p-6 transition-all duration-300 cursor-pointer relative group flex flex-col justify-between" onclick="openMemberModal('ayush')">
+                    <div class="absolute top-4 right-4 bg-purple-500/20 text-purple-300 text-[10px] font-mono font-bold px-2.5 py-1 rounded-full border border-purple-500/40 uppercase tracking-widest z-10">
+                        BACKEND & BIZ
+                    </div>
+                    <div>
+                        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-600 to-cyan-400 p-1 mb-5 group-hover:scale-105 transition-transform flex items-center justify-center">
+                            <div class="w-full h-full bg-slate-950 rounded-xl flex items-center justify-center text-purple-400 text-3xl font-black font-mono">
+                                <img src="file:///C:/Users/Aman%20Singh/Downloads/WhatsApp Image 2026-09-19 at 12.01.17.jpeg" alt="Ayush Godiayal" class="w-full h-full object-cover object-top rounded-[14px] transform group-hover:scale-110 transition-transform duration-500 filter brightness-105 contrast-105" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-cyan-400 text-2xl font-black font-mono\'></div>';">  
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors">Ayush Godiayal</h3>
+                        <p class="text-xs font-mono text-cyan-400 mt-1 uppercase tracking-wider font-semibold">Backend Dev & Model Tester</p>
+                        
+                        <p class="text-gray-300 text-xs mt-3 leading-relaxed line-clamp-3">
+                            Backend engineering authority who rigorously tests every data pipeline and AI model. Bridges technical accuracy with strategic business acumen.
+                        </p>
+
+                        <!-- Skill tags -->
+                        <div class="flex flex-wrap gap-1.5 mt-4">
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-cyan-300 border border-cyan-500/20">Backend Logic</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-amber-300 border border-amber-500/20">Model QA</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-purple-300 border border-purple-500/20">Biz Domain</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-gray-800 flex items-center justify-between text-xs font-mono text-gray-400 group-hover:text-cyan-400">
+                        <span>Click for Full Spec</span>
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- Member 4: Brinda Bayya -->
+                <div class="glass-panel glass-panel-hover rounded-2xl p-6 transition-all duration-300 cursor-pointer relative group flex flex-col justify-between" onclick="openMemberModal('brinda')">
+                    <div class="absolute top-4 right-4 bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold px-2.5 py-1 rounded-full border border-emerald-500/40 uppercase tracking-widest z-10">
+                        USER & INSIGHTS
+                    </div>
+                    <div>
+                        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 p-1 mb-5 group-hover:scale-105 transition-transform flex items-center justify-center">
+                            <div class="w-full h-full bg-slate-950 rounded-xl flex items-center justify-center text-emerald-400 text-3xl font-black font-mono">
+                              <img src="C:/Users/Aman%20Singh/Downloads/WhatsApp Image 2026-09-19 at 12.01.14.jpeg" alt="Brinda Bayya" class="w-full h-full object-cover object-top rounded-[14px] transform group-hover:scale-110 transition-transform duration-500 filter brightness-105 contrast-105" onerror="this.onerror=null;">  
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors">Brinda Bayya</h3>
+                        <p class="text-xs font-mono text-cyan-400 mt-1 uppercase tracking-wider font-semibold">Model Tester & Public Insight Specialist</p>
+                        
+                        <p class="text-gray-300 text-xs mt-3 leading-relaxed line-clamp-3">
+                            Ensures model execution perfection while gathering live field data and public interest analytics to guarantee real-world user adoption.
+                        </p>
+
+                        <!-- Skill tags -->
+                        <div class="flex flex-wrap gap-1.5 mt-4">
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-cyan-300 border border-cyan-500/20">Model Testing</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-amber-300 border border-amber-500/20">Public Surveys</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-purple-300 border border-purple-500/20">User Insights</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-gray-800 flex items-center justify-between text-xs font-mono text-gray-400 group-hover:text-cyan-400">
+                        <span>Click for Full Spec</span>
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+            </div>
+
+        <section id="capabilities" class="py-20 bg-slate-950/60 border-y border-gray-800/60">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-xs font-mono uppercase text-amber-400 font-bold tracking-widest">End-To-End Development Pipeline</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">What The Titans Deliver</h2>
+                    <p class="text-gray-400 text-sm mt-3">From public domain insight collection to high-performance model testing and full stack web architecture.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Card 1 -->
+                    <div class="glass-panel p-8 rounded-2xl relative overflow-hidden group">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xl mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">Custom AI & Model Engineering</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            We conceptualize, train, and test custom data models tailored to your domain needs, ensuring high accuracy and business applicability.
+                        </p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="glass-panel p-8 rounded-2xl relative overflow-hidden group">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-xl mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-vial-circle-check"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">Multi-Tier Model Testing & QA</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Rigorous data testing by Ayush and Brinda ensures edge cases are solved, parameters are optimized, and models operate error-free.
+                        </p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="glass-panel p-8 rounded-2xl relative overflow-hidden group">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-xl mb-6 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">Public Sentiment & Market Insights</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Field research and user validation to guarantee that models and web solutions hit maximum audience engagement and real business demand.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="request-model" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="gradient-border max-w-4xl mx-auto shadow-2xl">
+                <div class="bg-slate-950/90 rounded-[15px] p-6 sm:p-10 md:p-12">
+                    
+                    <div class="text-center mb-10">
+                        <span class="text-xs font-mono text-cyan-400 font-bold uppercase tracking-widest"><i class="fa-solid fa-paper-plane mr-2"></i>CLIENT INTAKE PORTAL</span>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Have a Business Problem? <br><span class="gradient-text">Let The Titans Solve & Build It</span></h2>
+                        <p class="text-gray-400 text-sm mt-3 max-w-xl mx-auto">
+                            Submit your requirements below. Our team leader **Aman Singh Tomar** and squad will analyze your request and reach out promptly.
+                        </p>
+                    </div>
+
+                    <form id="client-request-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <!-- Client Name -->
+                            <div>
+                                <label class="block text-xs font-mono uppercase text-gray-300 font-semibold mb-2">Your Name / Organization <span class="text-cyan-400">*</span></label>
+                                <input type="text" id="client-name" required placeholder="e.g. John Doe / TechCorp" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors">
+                            </div>
+
+                            <!-- Client Contact Email/Phone -->
+                            <div>
+                                <label class="block text-xs font-mono uppercase text-gray-300 font-semibold mb-2">Contact Info (Phone / Email) <span class="text-cyan-400">*</span></label>
+                                <input type="text" id="client-contact" required placeholder="e.g. +1 555-0192 or john@example.com" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <!-- Solution Category -->
+                            <div>
+                                <label class="block text-xs font-mono uppercase text-gray-300 font-semibold mb-2">Solution Type Needed <span class="text-cyan-400">*</span></label>
+                                <select id="client-solution-type" required class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-gray-800 text-white focus:outline-none focus:border-cyan-400 transition-colors">
+                                    <option value="" disabled selected>Select Solution Type...</option>
+                                    <option value="Custom AI Model Development">Custom AI / ML Model Development</option>
+                                    <option value="Model Testing & Performance Audit">Model Testing & Performance Audit</option>
+                                    <option value="Full-Stack Web App Development">Full-Stack Web Application</option>
+                                    <option value="Database Architecture & Python Logic">Database & Python Pipeline Architecture</option>
+                                    <option value="Market Research & Public Interest Survey">Market Research & Public Interest Analytics</option>
+                                </select>
+                            </div>
+
+                            <!-- Budget Range -->
+                            <div>
+                                <label class="block text-xs font-mono uppercase text-gray-300 font-semibold mb-2">Estimated Budget / Scope</label>
+                                <select id="client-budget" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-gray-800 text-white focus:outline-none focus:border-cyan-400 transition-colors">
+                                    <option value="Flexible / Undefined">Flexible / To be discussed</option>
+                                    <option value="Micro Project (< $1k)">Starter / Micro Solution</option>
+                                    <option value="Medium Scale ($1k - $5k)">Medium Scale Development</option>
+                                    <option value="Enterprise / Custom ($5k+)">Enterprise / Complex Model System</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Problem Description -->
+                        <div>
+                            <label class="block text-xs font-mono uppercase text-gray-300 font-semibold mb-2">Problem Statement / Project Details <span class="text-cyan-400">*</span></label>
+                            <textarea id="client-problem" required rows="4" placeholder="Describe the challenge you are facing or the AI model/website you need us to engineer for you..." class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors resize-none"></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div>
+                            <button type="submit" id="submit-btn" class="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 via-indigo-600 to-amber-500 text-slate-950 font-black text-sm uppercase tracking-wider hover:shadow-neon-cyan transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-3">
+                                <i class="fa-solid fa-rocket text-lg"></i>
+                                <span>Transmit Project Request To Titans</span>
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-16 bg-slate-950 border-t border-gray-800/80">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                    
+                    <!-- Left: Direct Founder Contact Card -->
+                    <div class="glass-panel p-8 rounded-2xl border-l-4 border-amber-400">
+                        <span class="text-xs font-mono text-amber-400 uppercase tracking-widest font-bold">FOUNDER DIRECT CONTACT</span>
+                        <h3 class="text-2xl font-black text-white mt-1">Aman Singh Tomar</h3>
+                        <p class="text-xs font-mono text-gray-400 mb-6">Team Leader & Head Developer</p>
+
+                        <div class="space-y-4">
+                            <a href="tel:8604689569" class="flex items-center gap-4 text-gray-200 hover:text-cyan-400 transition-colors group">
+                                <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] font-mono text-gray-400 uppercase">Direct Phone Line</div>
+                                    <div class="text-lg font-bold font-mono">8604689569</div>
+                                </div>
+                            </a>
+
+                            <div class="flex items-center gap-4 text-gray-200">
+                                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+                                    <i class="fa-solid fa-map-pin"></i>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] font-mono text-gray-400 uppercase">Operational Mode</div>
+                                    <div class="text-sm font-semibold">Remote & On-Site Deployments</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Squad Quick Overview -->
+                    <div class="space-y-4">
+                        <h4 class="text-xl font-extrabold text-white">Why Work With <span class="gradient-text">The Titan Warriors</span>?</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            We combine rigorous technical expertise across frontend, backend, database engineering, and model validation with deep public market sentiment insights. Every member plays a distinct role in turning complex project requirements into reliable software.
+                        </p>
+
+                        <div class="grid grid-cols-2 gap-3 text-xs font-mono text-gray-300 pt-2">
+                            <div class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Full Stack Architecture</div>
+                            <div class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Python & SQL Research</div>
+                            <div class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Rigorous Model Testing</div>
+                            <div class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> Public Interest Analytics</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mt-16 pt-8 border-t border-gray-900 text-center text-xs font-mono text-gray-500 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div>© <span id="year-span"></span> The Titan Warriors. All rights reserved.</div>
+                    <div class="flex items-center space-x-6">
+                        <span>Lead: Aman Singh Tomar</span>
+                        <span>•</span>
+                        <span>Contact: 8604689569</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Overlays -->
+    <div id="member-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden transition-opacity duration-300">
+        <div class="glass-panel border-cyan-500/30 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 relative shadow-2xl animate-in fade-in zoom-in duration-200">
+            
+            <!-- Modal Close Button -->
+            <button onclick="closeMemberModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white w-9 h-9 rounded-full bg-slate-900/80 border border-gray-800 flex items-center justify-center transition-colors z-20">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Modal Content Injector Container -->
+            <div id="modal-content">
+                <!-- Dynamically Populated by JavaScript -->
+            </div>
+
+        </div>
+    </div>
+
+    <div id="success-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+        <div class="glass-panel border-emerald-500/40 rounded-3xl max-w-md w-full p-8 text-center relative shadow-neon-blue">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-3xl mx-auto mb-4 border border-emerald-500/40">
+                <i class="fa-solid fa-check-double"></i>
+            </div>
+            <h3 class="text-2xl font-black text-white">Transmission Received!</h3>
+            <p class="text-gray-300 text-xs mt-2 leading-relaxed" id="success-message">
+                Your request has been logged. **Aman Singh Tomar** and team will review your specifications and contact you soon.
+            </p>
+            <button onclick="closeSuccessModal()" class="mt-6 px-6 py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs uppercase tracking-wider hover:bg-emerald-400 transition-colors">
+                Acknowledge
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Set dynamic copyright year
+        document.getElementById('year-span').innerText = new Date().getFullYear();
+
+        // Member Data Registry
+        const teamData = {
+            aman: {
+                name: "Aman Singh Tomar",
+                role: "Team Leader & Head Developer (Founder)",
+                badge: "FOUNDER & LEADER",
+                phone: "8604689569",
+                photo: "input_file_3.png",
+                initials: "AT",
+                color: "from-amber-400 via-cyan-400 to-purple-600",
+                bio: "Aman is the Founder and Leader of The Titan Warriors. Renowned for his exceptional leadership and elite communication skills, he bridges client goals with deep full-stack architecture and overall project strategy.",
+                responsibilities: [
+                    "Directs overarching team strategy & project execution",
+                    "Head Full-Stack Architect & Code Reviewer",
+                    "Primary client communication & requirements manager",
+                    "Leads end-to-end AI model system integration"
+                ],
+                skills: [
+                    { name: "Leadership & Team Management", level: 98 },
+                    { name: "Communication & Client Relations", level: 96 },
+                    { name: "Full-Stack System Architecture", level: 92 },
+                    { name: "Project Management & Strategy", level: 95 }
+                ]
+            },
+            anamika: {
+                name: "Anamika Jaiswal",
+                role: "Frontend Developer & Database Researcher",
+                badge: "FRONTEND & DB RESEARCH",
+                photo: "input_file_4.png",
+                initials: "AJ",
+                color: "from-cyan-400 via-indigo-500 to-purple-600",
+                bio: "Anamika specializes in building intuitive user interfaces and conducting deep database research. She is an exceptionally good listener, converting complex data needs into efficient SQL schemas and Python backend logic.",
+                responsibilities: [
+                    "Engineers responsive, sleek HTML, CSS, and interactive frontends",
+                    "Conducts database research and designs SQL structures",
+                    "Writes Python data processing pipelines",
+                    "Active listening & precise client problem analysis"
+                ],
+                skills: [
+                    { name: "Python Development", level: 90 },
+                    { name: "SQL & Database Architecture", level: 92 },
+                    { name: "HTML5 / CSS3 & Modern UI/UX", level: 95 },
+                    { name: "Active Listening & Requirements Analysis", level: 97 }
+                ]
+            },
+            ayush: {
+                name: "Ayush Godiayal",
+                role: "Backend Developer & Model Tester / Business Analyst",
+                badge: "BACKEND & BIZ LOGIC",
+                initials: "AG",
+                color: "from-indigo-500 via-blue-600 to-cyan-400",
+                bio: "Ayush is the backend backbone of the team. He tests every machine learning model and data route thoroughly while applying deep business knowledge to ensure market feasibility.",
+                responsibilities: [
+                    "Engineers robust backend APIs and server pipelines",
+                    "Conducts exhaustive empirical testing on ML models",
+                    "Ensures data integrity & validation across systems",
+                    "Analyzes business metrics and commercial viability"
+                ],
+                skills: [
+                    { name: "Backend Logic & API Engineering", level: 94 },
+                    { name: "Model Rigorous Testing & QA", level: 93 },
+                    { name: "Business Strategy & Logic", level: 90 },
+                    { name: "Data Validation & Pipeline Stress-Testing", level: 91 }
+                ]
+            },
+            brinda: {
+                name: "Brinda Bayya",
+                role: "Model Tester & Public Insight Specialist",
+                badge: "QA & PUBLIC INSIGHTS",
+                initials: "BB",
+                color: "from-emerald-400 via-teal-500 to-cyan-500",
+                bio: "Brinda ensures every AI model runs flawlessly in production while connecting directly with end users and surroundings to gather empirical feedback on public interest.",
+                responsibilities: [
+                    "Performs model accuracy and edge-case execution testing",
+                    "Gathers field data and public interest metrics",
+                    "Conducts surrounding user sentiment analysis",
+                    "Ensures operational user acceptance testing (UAT)"
+                ],
+                skills: [
+                    { name: "Model Functionality Testing", level: 92 },
+                    { name: "Public Data & Field Insights Collection", level: 96 },
+                    { name: "Sentiment & Interest Analysis", level: 94 },
+                    { name: "User Experience Validation (UAT)", level: 89 }
+                ]
+            }
+        };
+
+        // Open Member Modal Function
+        function openMemberModal(key) {
+            const data = teamData[key];
+            if (!data) return;
+
+            const modalContent = document.getElementById('modal-content');
+            
+            // Generate skill bars
+            const skillsHTML = data.skills.map(s => `
+                <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-mono">
+                        <span class="text-gray-300 font-medium">${s.name}</span>
+                        <span class="text-cyan-400 font-bold">${s.level}%</span>
+                    </div>
+                    <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-gray-800">
+                        <div class="bg-gradient-to-r from-cyan-400 to-indigo-500 h-full rounded-full transition-all duration-1000" style="width: ${s.level}%"></div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Generate responsibilities
+            const respHTML = data.responsibilities.map(r => `
+                <li class="flex items-start gap-2 text-xs text-gray-300">
+                    <i class="fa-solid fa-chevron-right text-cyan-400 text-[10px] mt-1"></i>
+                    <span>${r}</span>
+                </li>
+            `).join('');
+
+            const avatarHTML = data.photo ? `
+                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br ${data.color} p-[2px] shrink-0 shadow-neon-cyan overflow-hidden flex items-center justify-center">
+                    <img src="${data.photo}" alt="${data.name}" class="w-full h-full object-cover object-top rounded-[14px]" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-full h-full bg-slate-900 rounded-[14px] flex items-center justify-center text-white text-2xl font-black font-mono\'>${data.initials}</div>';">
+                </div>
+            ` : `
+                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br ${data.color} p-1 shrink-0 flex items-center justify-center">
+                    <div class="w-full h-full bg-slate-900 rounded-xl flex items-center justify-center text-white text-2xl font-black font-mono">
+                        ${data.initials}
+                    </div>
+                </div>
+            `;
+
+            modalContent.innerHTML = `
+                <div class="flex items-center gap-5 mb-6">
+                    ${avatarHTML}
+                    <div>
+                        <span class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-widest">${data.badge}</span>
+                        <h3 class="text-2xl font-black text-white mt-1">${data.name}</h3>
+                        <p class="text-xs font-mono text-cyan-400">${data.role}</p>
+                        ${data.phone ? `<p class="text-xs font-mono text-amber-400 mt-1 flex items-center gap-1.5"><i class="fa-solid fa-phone text-emerald-400"></i> Direct Line: <span class="font-bold">${data.phone}</span></p>` : ''}
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="text-xs font-mono uppercase text-gray-400 font-semibold mb-2">Operational Overview</h4>
+                        <p class="text-gray-300 text-xs sm:text-sm leading-relaxed glass-panel p-4 rounded-xl">
+                            ${data.bio}
+                        </p>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-mono uppercase text-gray-400 font-semibold mb-3">Key Responsibilities</h4>
+                        <ul class="space-y-2 glass-panel p-4 rounded-xl">
+                            ${respHTML}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="text-xs font-mono uppercase text-gray-400 font-semibold mb-3">Core Proficiency Specs</h4>
+                        <div class="space-y-3 glass-panel p-4 rounded-xl">
+                            ${skillsHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const modal = document.getElementById('member-modal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMemberModal() {
+            const modal = document.getElementById('member-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on click outside
+        document.getElementById('member-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeMemberModal();
+        });
+
+        // Form Submit Handler
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('client-name').value;
+            const type = document.getElementById('client-solution-type').value;
+
+            document.getElementById('success-message').innerHTML = `
+                Thank you, <strong>${name}</strong>! Your request for <strong>"${type}"</strong> has been transmitted.<br><br>
+                Founder <strong>Aman Singh Tomar</strong> and the team will review your parameters and reach out shortly.
+            `;
+
+            document.getElementById('success-modal').classList.remove('hidden');
+            document.getElementById('client-request-form').reset();
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('success-modal').classList.add('hidden');
+        }
+
+        function scrollToFounder() {
+            openMemberModal('aman');
+        }
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        const particleCount = 45;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+                this.color = Math.random() > 0.5 ? '#00f2fe' : '#fbbf24';
+                this.alpha = Math.random() * 0.5 + 0.2;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Connect nearby particles
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 120) {
+                        ctx.save();
+                        ctx.globalAlpha = (1 - dist / 120) * 0.15;
+                        ctx.strokeStyle = '#00f2fe';
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                }
+            }
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            requestAnimationFrame(animateCanvas);
+        }
+
+        window.onload = function() {
+            animateCanvas();
+        };
+    </script>
+</body>
+</html>
